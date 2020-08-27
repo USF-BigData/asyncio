@@ -23,14 +23,26 @@ public class Client extends ChannelInboundHandlerAdapter {
 
     private static final int toSend = 1000000;
 
-    public Client() {
+    private String hostname = "localhost";
+    private int port = 7777;
 
+    public Client() {
+        /* Do nothing: use default host/port */
+    }
+
+    public Client(String hostname, int port) {
+        this.hostname = hostname;
+        this.port = port;
     }
 
     public static void main(String[] args)
     throws IOException {
-        Client c = new Client();
-        c.send();
+        if (args.length >= 2) {
+            Client c = new Client(args[0], Integer.parseInt(args[1]));
+            c.send();
+        } else {
+            Client c = new Client();
+        }
     }
 
     public void send() {
@@ -46,7 +58,8 @@ public class Client extends ChannelInboundHandlerAdapter {
         PerformanceTimer pt = new PerformanceTimer();
         pt.start();
 
-        ChannelFuture cf = bootstrap.connect("localhost", 7777);
+        System.out.println("Connecting to " + hostname + ":" + port);
+        ChannelFuture cf = bootstrap.connect(hostname, port);
         cf.syncUninterruptibly();
 
         List<ChannelFuture> writes = new ArrayList<>();
