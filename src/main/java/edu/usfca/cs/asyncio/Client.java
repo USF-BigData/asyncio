@@ -42,6 +42,7 @@ public class Client extends ChannelInboundHandlerAdapter {
             c.send();
         } else {
             Client c = new Client();
+            c.send();
         }
     }
 
